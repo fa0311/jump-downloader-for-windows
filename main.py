@@ -130,7 +130,7 @@ class input_window:
             padx=0,
         )
 
-        tkinter.Label(text="遅延(秒)").grid(
+        tkinter.Label(text="続きを全てダウンロード").grid(
             column=0,
             row=201,
             columnspan=1,
@@ -138,11 +138,29 @@ class input_window:
             padx=0,
         )
 
-        self.wait = tkinter.StringVar(self.window)
-        self.wait.set("0")
-        tkinter.Entry(self.window, textvariable=self.wait).grid(
+        self.next_flag = tkinter.BooleanVar()
+        self.next_checkbox = tkinter.Checkbutton(variable=self.next_flag)
+        self.next_checkbox.grid(
             column=1,
             row=201,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        tkinter.Label(text="遅延(秒)").grid(
+            column=0,
+            row=202,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        self.wait_box = tkinter.StringVar(self.window)
+        self.wait_box.set("0")
+        tkinter.Entry(self.window, textvariable=self.wait_box).grid(
+            column=1,
+            row=202,
             columnspan=2,
             pady=0,
             padx=0,
@@ -201,21 +219,22 @@ class input_window:
         )
 
     def click(self, event=None):
-        if(self.debug):
+        if self.debug:
             self.download()
         else:
-            asyncio.new_event=None_loop().run_in_executor(None, self.download)
+            asyncio.new_event_loop().run_in_executor(None, self.download)
 
     def download(self):
         url = self.url_box.get()
         dir = self.folder_name.get().replace("\\", "/") + "/"
-        if not str.isdigit(self.wait.get()):
-            self.wait.set("0")
+        if not str.isdigit(self.wait_box.get()):
+            self.wait_box.set("0")
         progress_window().run().jpd_run().login(
             email_address=self.email_address.get(), password=self.password.get()
         ).download(
             url,
-            sleeptime=int(self.wait.get()),
+            next_flag=self.next_flag.get(),
+            sleeptime=int(self.wait_box.get()),
             pdfConversion=self.pdf_flag.get(),
             dir=dir,
         )
@@ -242,7 +261,11 @@ class progress_window:
             self.add_log("既に終了しています")
         else:
             self.add_log("終了しています")
-            self.exit = True
+            self._exit()
+    
+    def _exit(self):
+        self.exit = True
+
 
     def jpd_run(self):
         self.jpd = jumpplus_downloader.jumpplus_downloader()
@@ -251,14 +274,14 @@ class progress_window:
     def login(self, **kwargs):
         if len(kwargs["email_address"]) > 0 and len(kwargs["password"]) > 0:
             json = self.jpd.login(**kwargs).response.json()
-            if json.get("ok",False):
+            if json.get("ok", False):
                 self.add_log("ログインに成功しました")
             else:
                 self.add_log(json["error"]["message"])
                 self.force_exit()
         return self
 
-    def download(self, url, **kwargs):
+    def download(self, url, next_flag=False, **kwargs):
         try:
             while url and not self.exit:
                 self.add_log(f"ダウンロードしています: {url}")
@@ -269,9 +292,13 @@ class progress_window:
                         title=self.jpd.list["readableProduct"]["title"]
                     )
                 )
+                if not next_flag:
+                    self.exit()
         except:
             self.add_log("エラーが発生しました")
+            self._exit()
         self.add_log("終了しました")
+        self._exit()
 
     def add_log(self, log):
         self.progress.insert("end", f"{log}\n")
@@ -280,4 +307,4 @@ class progress_window:
 
 
 if __name__ == "__main__":
-    input_window(debug=True).run().window.mainloop()
+    input_window(debug=False).run().window.mainloop()
