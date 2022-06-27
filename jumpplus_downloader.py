@@ -35,11 +35,11 @@ class jumpplus_downloader:
         ).content
         return self
 
-    def auto_list_download(self, url, sleeptime=2, pdfConversion=True):
+    def auto_list_download(self, url, sleeptime=2, pdfConversion=True, dir="./"):
         self.json_download(url)
         self.file = 0
-        if os.path.isdir(self.list["readableProduct"]["title"]) != True:
-            os.mkdir(self.list["readableProduct"]["title"])
+        if os.path.isdir(dir + self.list["readableProduct"]["title"]) != True:
+            os.mkdir(dir + self.list["readableProduct"]["title"])
         for page in self.list["readableProduct"]["pageStructure"]["pages"]:
             time.sleep(sleeptime)
             if page["type"] == "main":
@@ -47,7 +47,7 @@ class jumpplus_downloader:
                 self.w = page["width"]
                 self.download(page["src"], False)
                 self.processing()
-                self.output("./" + self.list["readableProduct"]["title"] + "/")
+                self.output(dir + self.list["readableProduct"]["title"] + "/")
         if pdfConversion:
             self.convertToPdf()
 
