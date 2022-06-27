@@ -73,8 +73,8 @@ class jumpplus_downloader:
         imageSize = readImage.size
         divideNum = 4
         multiple = 8
-        width =  (math.floor(float(imageSize[0]) / (divideNum * multiple)) * multiple);
-        height =  (math.floor(float(imageSize[1]) / (divideNum * multiple)) * multiple);
+        width = math.floor(float(imageSize[0]) / (divideNum * multiple)) * multiple
+        height = math.floor(float(imageSize[1]) / (divideNum * multiple)) * multiple
         buff = []
         counterX = 0
         counterY = 0
@@ -87,7 +87,7 @@ class jumpplus_downloader:
                         width * counterX,
                         height * counterY,
                         width * (counterX + 1),
-                        height  * (counterY + 1),
+                        height * (counterY + 1),
                     )
                 )
                 inbuff.append(cropped)
