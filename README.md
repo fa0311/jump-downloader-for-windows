@@ -12,3 +12,11 @@ Windows 上でのみ動作します<br>
 ## インストール
 
 [Release](https://github.com/fa0311/jump-downloader-for-windows/releases) から exe をダウンロード
+
+## 典拠
+
+[fa0311/jump-downloader](https://github.com/fa0311/jump-downloader)
+
+## ライセンス
+
+jump-downloader-for-windows is under MIT License

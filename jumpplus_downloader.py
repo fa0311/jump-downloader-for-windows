@@ -49,7 +49,7 @@ class jumpplus_downloader:
                 self.processing()
                 self.output(dir + self.list["readableProduct"]["title"] + "/")
         if pdfConversion:
-            self.convertToPdf()
+            self.convertToPdf(dir)
 
     def json_download(self, url):
         # Counterfeit User agent for absolutely successfully connection.
@@ -108,12 +108,12 @@ class jumpplus_downloader:
             counterX = 0
             counterY += 1
 
-    def output(self, file="./"):
-        self.converted_img.save(file + str(self.file) + ".png")
+    def output(self, dir="./"):
+        self.converted_img.save(dir + str(self.file) + ".png")
         self.file += 1
 
-    def convertToPdf(self):
-        directory = "./" + self.list["readableProduct"]["title"] + "/"
+    def convertToPdf(self, dir="./"):
+        directory = dir + self.list["readableProduct"]["title"] + "/"
         sourceDir = os.listdir(directory)
         imgcount = 0
         img = []
@@ -122,7 +122,7 @@ class jumpplus_downloader:
         for images in sourceDir:
             img.append(directory + str(imgcount) + filextend)
             imgcount = imgcount + 1
-        with open("./" + self.list["readableProduct"]["title"] + ".pdf", "wb") as f:
+        with open(dir + self.list["readableProduct"]["title"] + ".pdf", "wb") as f:
             f.write(img2pdf.convert(img))
 
     # A simple Json Dumper for debugging.
