@@ -262,10 +262,9 @@ class progress_window:
         else:
             self.add_log("終了しています")
             self._exit()
-    
+
     def _exit(self):
         self.exit = True
-
 
     def jpd_run(self):
         self.jpd = jumpplus_downloader.jumpplus_downloader()
@@ -293,7 +292,7 @@ class progress_window:
                     )
                 )
                 if not next_flag:
-                    self.exit()
+                    self._exit()
         except:
             self.add_log("エラーが発生しました")
             self._exit()
