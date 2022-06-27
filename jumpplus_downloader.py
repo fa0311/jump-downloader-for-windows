@@ -10,11 +10,12 @@ import math
 
 
 class jumpplus_downloader:
-    def __init__(self):
+    def __init__(self, dir="./"):
         self.file = 0
         self.h = 1200
         self.w = 760
         self.session = requests.session()
+        self.dir = dir
 
     def __get_headers(self):
         return {
@@ -35,11 +36,11 @@ class jumpplus_downloader:
         )
         return self
 
-    def auto_list_download(self, url, sleeptime=2, pdfConversion=True, dir="./"):
+    def auto_list_download(self, url, sleeptime=2, pdfConversion=True):
         self.json_download(url)
         self.file = 0
-        if os.path.isdir(dir + self.list["readableProduct"]["title"]) != True:
-            os.mkdir(dir + self.list["readableProduct"]["title"])
+        if os.path.isdir(self.dir + self.list["readableProduct"]["title"]) != True:
+            os.mkdir(self.dir + self.list["readableProduct"]["title"])
         for page in self.list["readableProduct"]["pageStructure"]["pages"]:
             time.sleep(sleeptime)
             if page["type"] == "main":
@@ -47,9 +48,9 @@ class jumpplus_downloader:
                 self.w = page["width"]
                 self.download(page["src"], False)
                 self.processing()
-                self.output(dir + self.list["readableProduct"]["title"] + "/")
+                self.output(self.dir + self.list["readableProduct"]["title"] + "/")
         if pdfConversion:
-            self.convertToPdf(dir)
+            self.convertToPdf()
 
     def json_download(self, url):
         # Counterfeit User agent for absolutely successfully connection.
@@ -108,12 +109,12 @@ class jumpplus_downloader:
             counterX = 0
             counterY += 1
 
-    def output(self, dir="./"):
+    def output(self, dir):
         self.converted_img.save(dir + str(self.file) + ".png")
         self.file += 1
 
-    def convertToPdf(self, dir="./"):
-        directory = dir + self.list["readableProduct"]["title"] + "/"
+    def convertToPdf(self):
+        directory = self.dir + self.list["readableProduct"]["title"] + "/"
         sourceDir = os.listdir(directory)
         imgcount = 0
         img = []
@@ -122,7 +123,7 @@ class jumpplus_downloader:
         for images in sourceDir:
             img.append(directory + str(imgcount) + filextend)
             imgcount = imgcount + 1
-        with open(dir + self.list["readableProduct"]["title"] + ".pdf", "wb") as f:
+        with open(self.dir + self.list["readableProduct"]["title"] + ".pdf", "wb") as f:
             f.write(img2pdf.convert(img))
 
     # A simple Json Dumper for debugging.

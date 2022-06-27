@@ -229,14 +229,13 @@ class input_window:
         dir = self.folder_name.get().replace("\\", "/") + "/"
         if not str.isdigit(self.wait_box.get()):
             self.wait_box.set("0")
-        progress_window().run().jpd_run().login(
+        progress_window().run().jpd_run(dir=dir).login(
             email_address=self.email_address.get(), password=self.password.get()
         ).download(
             url,
             next_flag=self.next_flag.get(),
             sleeptime=int(self.wait_box.get()),
             pdfConversion=self.pdf_flag.get(),
-            dir=dir,
         )
 
 
@@ -266,8 +265,8 @@ class progress_window:
     def _exit(self):
         self.exit = True
 
-    def jpd_run(self):
-        self.jpd = jumpplus_downloader.jumpplus_downloader()
+    def jpd_run(self, dir="./"):
+        self.jpd = jumpplus_downloader.jumpplus_downloader(dir=dir)
         return self
 
     def login(self, **kwargs):
