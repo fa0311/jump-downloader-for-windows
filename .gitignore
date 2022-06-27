@@ -1,2 +1,5 @@
-*.png
-__pycache__
+/build
+/dist
+/*.spec
+/__pycache__
+*.exe
