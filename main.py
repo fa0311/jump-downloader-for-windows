@@ -12,10 +12,11 @@ VERSION = "0.1"
 
 
 class input_window:
-    def __init__(self):
+    def __init__(self, debug=False):
+        self.debug = debug
         self.window = tkinter.Tk()
         self.window.title("jump-downloader-for-windows")
-        self.window.geometry("400x325")
+        self.window.geometry("400x450")
 
     def run(self):
         tkinter.Label(self.window, text="マンガのURL").grid(
@@ -62,13 +63,87 @@ class input_window:
             pady=0,
             padx=0,
         )
-
-        self.pdf_flag = tkinter.BooleanVar()
-        self.pdf_checkbox = tkinter.Checkbutton(text="PDF出力", variable=self.pdf_flag)
-        self.pdf_checkbox.grid(
-            column=1,
+        tkinter.Label(self.window).grid(
+            column=0,
             row=3,
             columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        tkinter.Label(self.window, text="ログイン情報(任意) メールアドレス").grid(
+            column=0,
+            row=100,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+        self.email_address = tkinter.StringVar(self.window)
+        tkinter.Entry(self.window, textvariable=self.email_address).grid(
+            column=1,
+            row=100,
+            columnspan=2,
+            pady=0,
+            padx=0,
+        )
+
+        tkinter.Label(self.window, text="ログイン情報(任意) パスワード").grid(
+            column=0,
+            row=101,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        self.password = tkinter.StringVar(self.window)
+        tkinter.Entry(self.window, textvariable=self.password).grid(
+            column=1,
+            row=101,
+            columnspan=2,
+            pady=0,
+            padx=0,
+        )
+
+        tkinter.Label(self.window).grid(
+            column=0,
+            row=102,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        tkinter.Label(text="PDF出力").grid(
+            column=0,
+            row=200,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        self.pdf_flag = tkinter.BooleanVar()
+        self.pdf_checkbox = tkinter.Checkbutton(variable=self.pdf_flag)
+        self.pdf_checkbox.grid(
+            column=1,
+            row=200,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        tkinter.Label(text="遅延(秒)").grid(
+            column=0,
+            row=201,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        self.wait = tkinter.StringVar(self.window)
+        self.wait.set("0")
+        tkinter.Entry(self.window, textvariable=self.wait).grid(
+            column=1,
+            row=201,
+            columnspan=2,
             pady=0,
             padx=0,
         )
@@ -79,7 +154,7 @@ class input_window:
             text="このツールは不正ダウンロードを助長するものではありません。このツールはダウンロードした著作物を情報処理の過程において円滑又は効率的に当該電子計算機の記録媒体に記録することを目的として制作されました。利用が終わった際は速やかに当該著作物を記録媒体から削除して下さい。マンガをアーカイブしたり第三者に公開、アップロードする行為は著作権法違反です。",
         ).grid(
             column=0,
-            row=4,
+            row=300,
             columnspan=2,
             pady=10,
             padx=0,
@@ -89,7 +164,7 @@ class input_window:
         enter_button.bind("<ButtonPress>", self.click)
         enter_button.grid(
             column=0,
-            row=5,
+            row=400,
             columnspan=2,
             pady=0,
             padx=20,
@@ -99,7 +174,7 @@ class input_window:
         enter_update.bind("<ButtonPress>", self.update_dialog)
         enter_update.grid(
             column=0,
-            row=6,
+            row=401,
             columnspan=2,
             pady=10,
             padx=20,
@@ -110,30 +185,39 @@ class input_window:
             text="{app_name} v{version}".format(app_name=APP_NAME, version=VERSION),
         ).grid(
             column=0,
-            row=7,
+            row=500,
             columnspan=2,
         )
         return self
 
-    def folder_dialog(self, event):
+    def folder_dialog(self, event=None):
         folder_name = tkinter.filedialog.askdirectory(initialdir=self.folder_name.get())
         if len(folder_name) > 0:
             self.folder_name.set(folder_name)
 
-    def update_dialog(self, event):
+    def update_dialog(self, event=None):
         webbrowser.open(
             "https://github.com/fa0311/jump-downloader-for-windows/releases"
         )
 
-    def click(self, event):
-        asyncio.new_event_loop().run_in_executor(None, self.download)
+    def click(self, event=None):
+        if(self.debug):
+            self.download()
+        else:
+            asyncio.new_event=None_loop().run_in_executor(None, self.download)
 
     def download(self):
         url = self.url_box.get()
         dir = self.folder_name.get().replace("\\", "/") + "/"
-        print(dir)
-        progress_window().run().download(
-            url, sleeptime=0, pdfConversion=self.pdf_flag.get(), dir=dir
+        if not str.isdigit(self.wait.get()):
+            self.wait.set("0")
+        progress_window().run().jpd_run().login(
+            email_address=self.email_address.get(), password=self.password.get()
+        ).download(
+            url,
+            sleeptime=int(self.wait.get()),
+            pdfConversion=self.pdf_flag.get(),
+            dir=dir,
         )
 
 
@@ -153,24 +237,36 @@ class progress_window:
         self.progress.pack()
         return self
 
-    def force_exit(self, event):
+    def force_exit(self, event=None):
         if self.exit:
             self.add_log("既に終了しています")
         else:
             self.add_log("終了しています")
             self.exit = True
 
-    def download(self, url, **arg):
-        self.add_log("開始します")
+    def jpd_run(self):
+        self.jpd = jumpplus_downloader.jumpplus_downloader()
+        return self
+
+    def login(self, **kwargs):
+        if len(kwargs["email_address"]) > 0 and len(kwargs["password"]) > 0:
+            json = self.jpd.login(**kwargs).response.json()
+            if json.get("ok",False):
+                self.add_log("ログインに成功しました")
+            else:
+                self.add_log(json["error"]["message"])
+                self.force_exit()
+        return self
+
+    def download(self, url, **kwargs):
         try:
             while url and not self.exit:
                 self.add_log(f"ダウンロードしています: {url}")
-                jpd = jumpplus_downloader.jumpplus_downloader()
-                jpd.auto_list_download(url=url, **arg)
-                url = jpd.list["readableProduct"]["nextReadableProductUri"]
+                self.jpd.auto_list_download(url=url, **kwargs)
+                url = self.jpd.list["readableProduct"]["nextReadableProductUri"]
                 self.add_log(
                     "ダウンロードが完了しました: {title}".format(
-                        title=jpd.list["readableProduct"]["title"]
+                        title=self.jpd.list["readableProduct"]["title"]
                     )
                 )
         except:
@@ -184,4 +280,4 @@ class progress_window:
 
 
 if __name__ == "__main__":
-    input_window().run().window.mainloop()
+    input_window(debug=True).run().window.mainloop()

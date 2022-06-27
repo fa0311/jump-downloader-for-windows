@@ -28,11 +28,11 @@ class jumpplus_downloader:
             "return_location_path": return_location_path,
         }
         headers = {"x-requested-with": "XMLHttpRequest"}
-        self.content = self.session.post(
+        self.response = self.session.post(
             "https://shonenjumpplus.com/user_account/login",
             headers=dict(self.__get_headers(), **headers),
             data=data,
-        ).content
+        )
         return self
 
     def auto_list_download(self, url, sleeptime=2, pdfConversion=True, dir="./"):
