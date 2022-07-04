@@ -12,6 +12,7 @@ Windows 上でのみ動作します<br>
 ## インストール
 
 [Release](https://github.com/fa0311/jump-downloader-for-windows/releases) から exe をダウンロード
+**Windows Defenderからブロックされた場合は保護の履歴の操作から許可を選択してください**<br>
 
 ```console
 $ git clone https://github.com/fa0311/jump-downloader-for-windows.git
