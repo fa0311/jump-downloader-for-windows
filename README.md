@@ -13,6 +13,11 @@ Windows 上でのみ動作します<br>
 
 [Release](https://github.com/fa0311/jump-downloader-for-windows/releases) から exe をダウンロード
 
+```console
+$ git clone https://github.com/fa0311/jump-downloader-for-windows.git
+$ pip3 install -r requirements.txt
+```
+
 ## 典拠
 
 [fa0311/jump-downloader](https://github.com/fa0311/jump-downloader)
