@@ -4,7 +4,7 @@ import tkinter.filedialog
 import tkinter.scrolledtext
 import os
 from turtle import right
-import jumpplus_downloader
+import jumpplus_downloader.jumpplus_downloader as jumpplus_downloader
 import webbrowser
 
 APP_NAME = "jump-downloader-for-windows"
@@ -139,6 +139,7 @@ class input_window:
         )
 
         self.next_flag = tkinter.BooleanVar()
+        self.next_flag.set(True)
         self.next_checkbox = tkinter.Checkbutton(variable=self.next_flag)
         self.next_checkbox.grid(
             column=1,
@@ -148,9 +149,28 @@ class input_window:
             padx=0,
         )
 
-        tkinter.Label(text="遅延(秒)").grid(
+        tkinter.Label(text="ファイル名のゼロ埋め").grid(
             column=0,
             row=202,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        self.zero_padding = tkinter.BooleanVar()
+        self.zero_padding.set(True)
+        self.zero_padding_checkbox = tkinter.Checkbutton(variable=self.zero_padding)
+        self.zero_padding_checkbox.grid(
+            column=1,
+            row=202,
+            columnspan=1,
+            pady=0,
+            padx=0,
+        )
+
+        tkinter.Label(text="遅延(秒)").grid(
+            column=0,
+            row=203,
             columnspan=1,
             pady=0,
             padx=0,
@@ -160,7 +180,7 @@ class input_window:
         self.wait_box.set("0")
         tkinter.Entry(self.window, textvariable=self.wait_box).grid(
             column=1,
-            row=202,
+            row=203,
             columnspan=2,
             pady=0,
             padx=0,
@@ -234,6 +254,7 @@ class input_window:
         ).download(
             url,
             next_flag=self.next_flag.get(),
+            zero_padding=self.zero_padding.get(),
             sleeptime=int(self.wait_box.get()),
             pdfConversion=self.pdf_flag.get(),
         )
