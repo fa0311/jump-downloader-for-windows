@@ -36,7 +36,7 @@ class jumpplus_downloader:
         )
         return self
 
-    def auto_list_download(self, url, sleeptime=2, pdfConversion=True):
+    def auto_list_download(self, url, sleeptime=2, pdfConversion=True, zero_padding=True):
         self.json_download(url)
         self.file = 0
         if os.path.isdir(self.dir + self.list["readableProduct"]["title"]) != True:
@@ -48,7 +48,7 @@ class jumpplus_downloader:
                 self.w = page["width"]
                 self.download(page["src"], False)
                 self.processing()
-                self.output(self.dir + self.list["readableProduct"]["title"] + "/")
+                self.output(self.dir + self.list["readableProduct"]["title"] + "/", zero_padding=zero_padding)
         if pdfConversion:
             self.convertToPdf()
 
@@ -109,8 +109,16 @@ class jumpplus_downloader:
             counterX = 0
             counterY += 1
 
-    def output(self, dir):
-        self.converted_img.save(dir + str(self.file) + ".png")
+    def output(self, dir,zero_padding=True):
+        file = str(self.file)
+        if zero_padding:
+            index = 1
+            zfill = 0
+            while len(self.list["readableProduct"]["pageStructure"]["pages"]) >= index:
+                index *= 10
+                zfill += 1
+            file = file.zfill(zfill)
+        self.converted_img.save(dir + file + ".png")
         self.file += 1
 
     def convertToPdf(self):
