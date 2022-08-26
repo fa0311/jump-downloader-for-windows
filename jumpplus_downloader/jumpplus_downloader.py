@@ -5,7 +5,6 @@ import time
 from PIL import Image
 from io import BytesIO
 import img2pdf
-import warnings
 import math
 
 
@@ -50,7 +49,7 @@ class jumpplus_downloader:
                 self.processing()
                 self.output(self.dir + self.list["readableProduct"]["title"] + "/", zero_padding=zero_padding)
         if pdfConversion:
-            self.convertToPdf()
+            self.convertToPdf(self.dir + self.list["readableProduct"]["title"] + "/")
 
     def json_download(self, url):
         # Counterfeit User agent for absolutely successfully connection.
@@ -121,17 +120,9 @@ class jumpplus_downloader:
         self.converted_img.save(dir + file + ".png")
         self.file += 1
 
-    def convertToPdf(self):
-        directory = self.dir + self.list["readableProduct"]["title"] + "/"
-        sourceDir = os.listdir(directory)
-        imgcount = 0
-        img = []
-        filextend = sourceDir[0].split(".")
-        filextend = str(".") + str(filextend[1])
-        for images in sourceDir:
-            img.append(directory + str(imgcount) + filextend)
-            imgcount = imgcount + 1
-        with open(self.dir + self.list["readableProduct"]["title"] + ".pdf", "wb") as f:
+    def convertToPdf(self, dir):
+        img = [i.replace("\\","/") for i in glob.glob(f"{dir}/*") if not i.endswith(".pdf")]
+        with open(dir + "output.pdf", "wb") as f:
             f.write(img2pdf.convert(img))
 
     # A simple Json Dumper for debugging.
