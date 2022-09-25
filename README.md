@@ -1,4 +1,5 @@
 # jump-downloader-for-windows
+![](https://img.shields.io/github/downloads/fa0311/jump-downloader-for-windows/total)
 
 ジャンプ系列の漫画をダウンロードするソフトウェア<br>
 Windows 上でのみ動作します<br>
