@@ -7,7 +7,7 @@ import jumpplus_downloader.py.lib.jumpplus_downloader as jumpplus_downloader
 import webbrowser
 
 APP_NAME = "jump-downloader-for-windows"
-VERSION = "1.2.0"
+VERSION = "1.2.1"
 
 
 class input_window:
