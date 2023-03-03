@@ -3,8 +3,7 @@ import tkinter
 import tkinter.filedialog
 import tkinter.scrolledtext
 import os
-from turtle import right
-import jumpplus_downloader.jumpplus_downloader as jumpplus_downloader
+import jumpplus_downloader.py.lib.jumpplus_downloader as jumpplus_downloader
 import webbrowser
 
 APP_NAME = "jump-downloader-for-windows"
