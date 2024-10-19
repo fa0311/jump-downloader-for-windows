@@ -1,13 +1,14 @@
 import asyncio
+import os
 import tkinter
 import tkinter.filedialog
 import tkinter.scrolledtext
-import os
-import jumpplus_downloader.py.lib.jumpplus_downloader as jumpplus_downloader
 import webbrowser
 
+import jumpplus_downloader.py.lib.jumpplus_downloader as jumpplus_downloader
+
 APP_NAME = "jump-downloader-for-windows"
-VERSION = "1.2.1"
+VERSION = "1.2.2"
 
 
 class input_window:
